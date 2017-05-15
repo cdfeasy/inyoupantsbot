@@ -1,0 +1,14 @@
+<!DOCTYPE aspectj PUBLIC
+        "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+
+    <aspects>
+        <!-- Aspects -->
+        <aspect name="idgtl.Catch"/>
+    </aspects>
+
+    <weaver options="-verbose -showWeaveInfo">
+        <include within="org.telegram.telegrambots.api.objects.MessageEntity"/>
+    </weaver>
+
+</aspectj>
