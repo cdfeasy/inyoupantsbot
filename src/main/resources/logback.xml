@@ -2,8 +2,8 @@
 <configuration scan="true" scanPeriod="120 seconds">
     <jmxConfigurator/>
     <!--  ===================================== Properties ========================================================= -->
-    <property name="LOG_DIR" value="/var/log/ifree-mfms-http-connector/log"/>
-    <property name="LOG_ROLLOVER_DIR" value="/var/log/ifree-mfms-http-connector/log.old"/>
+    <property name="LOG_DIR" value="/var/log/inyoupantsbot/log"/>
+    <property name="LOG_ROLLOVER_DIR" value="/var/log/inyoupantsbot/log.old"/>
 
     <property name="PATTERN_FORMAT" value="%-20(%d{yyyy-dd-MM HH:mm:ss.SSS}) %level %logger-%msg%n"/>
     <property name="MAX_HISTORY" value="60"/>
@@ -46,25 +46,6 @@
             <Pattern>${PATTERN_FORMAT}</Pattern>
         </encoder>
     </appender>
-
-    <logger name="org.apache.catalina.core" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.springframework.boot.web.servlet" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.springframework.jmx.export.annotation" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.springframework.scheduling.annotation" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.apache.coyote.http11" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
 
     <!--  ===================================== Other ============================================================== -->
     <root level="${GLOBAL_LOG_LEVEL}">

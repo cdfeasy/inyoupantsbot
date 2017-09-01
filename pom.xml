@@ -99,8 +99,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -110,7 +110,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>.</classpathPrefix>
-                            <mainClass>idgtl.Bot</mainClass>
+                            <mainClass>idgtl.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -134,7 +134,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>idgtl.Bot</mainClass>
+                            <mainClass>idgtl.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

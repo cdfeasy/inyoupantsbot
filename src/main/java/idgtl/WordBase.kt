@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import java.io.File
+import java.io.InputStreamReader
+import java.io.StringReader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -24,7 +26,9 @@ class WordBase {
     @PostConstruct
     fun init(){
         var gson= Gson();
-        config = gson.fromJson(Files.newBufferedReader(Paths.get(conf)), Config::class.java);
+
+       // config = gson.fromJson(Files.newBufferedReader(Paths.get(conf)), Config::class.java);
+        config = gson.fromJson(InputStreamReader(javaClass.getResourceAsStream("/word.json")), Config::class.java);
         var specialMap=HashMap<String,String>();
         for(entry in config.specials){
             var parts=entry.key.split(",");
