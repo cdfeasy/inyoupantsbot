@@ -2,8 +2,8 @@
 <configuration scan="true" scanPeriod="120 seconds">
     <jmxConfigurator/>
     <!--  ===================================== Properties ========================================================= -->
-    <property name="LOG_DIR" value="/var/log/inyoupantsbot/log"/>
-    <property name="LOG_ROLLOVER_DIR" value="/var/log/inyoupantsbot/log.old"/>
+    <property name="LOG_DIR" value="/opt/inyoupantsbot/logs"/>
+    <property name="LOG_ROLLOVER_DIR" value="/opt/inyoupantsbot/logs.old"/>
 
     <property name="PATTERN_FORMAT" value="%-20(%d{yyyy-dd-MM HH:mm:ss.SSS}) %level %logger-%msg%n"/>
     <property name="MAX_HISTORY" value="60"/>
@@ -14,15 +14,6 @@
     <property name="PERSISTENCE_LOGGER_LEVEL" value="INFO"/>
 
     <!--  ===================================== Common Appenders =================================================== -->
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>${CONSOLE_LEVEL}</level>
-        </filter>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>${PATTERN_FORMAT}</Pattern>
-        </layout>
-    </appender>
     <appender name="Runtime" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/runtime.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -49,7 +40,6 @@
 
     <!--  ===================================== Other ============================================================== -->
     <root level="${GLOBAL_LOG_LEVEL}">
-        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="Error"/>
         <appender-ref ref="Runtime"/>
     </root>

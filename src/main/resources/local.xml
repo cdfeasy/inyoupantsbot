@@ -15,18 +15,18 @@
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties">
-            <value>config=classpath:/word.json</value>
+            <value>state=C:/work/inyoupantsbot/src/main/resources/state.json</value>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>
 
     <bean id="bot" class="idgtl.Bot">
-        <property name="_botToken" value="259066586:AAGA0qrNDbpUg-soilsSjSUwMCx73cEyVLw"/>
-        <property name="_botUsername" value="InYourPantsBot"/>
+        <property name="_botToken" value="429076868:AAFm9x6ADk8lXZfs5zFxipRCxk5CtuMRh4M"/>
+        <property name="_botUsername" value="InYouPantsTestBot"/>
     </bean>
 
     <!--<bean class="idgtl.WordBase" init-method="init">-->
-        <!--<property name="conf" value="D:/work/samples/telegram-bot/src/main/resources/word.json"/>-->
+    <!--<property name="conf" value="D:/work/samples/telegram-bot/src/main/resources/word.json"/>-->
     <!--</bean>-->
 
 
