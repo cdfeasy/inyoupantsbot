@@ -3,7 +3,7 @@
     <jmxConfigurator/>
     <!--  ===================================== Properties ========================================================= -->
     <property name="LOG_DIR" value="/opt/inyoupantsbot/logs"/>
-    <property name="LOG_ROLLOVER_DIR" value="/opt/inyoupantsbot/logs.old"/>
+    <property name="LOG_ROLLOVER_DIR" value="/opt/inyoupantsbot/logs/logs.old"/>
 
     <property name="PATTERN_FORMAT" value="%-20(%d{yyyy-dd-MM HH:mm:ss.SSS}) %level %logger-%msg%n"/>
     <property name="MAX_HISTORY" value="60"/>
