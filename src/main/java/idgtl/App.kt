@@ -15,7 +15,7 @@ object App {
         try {
             ApiContextInitializer.init();
             val ctx = FileSystemXmlApplicationContext("/opt/inyoupantsbot/conf/inyoupanstbot.xml")
-          //  val ctx = ClassPathXmlApplicationContext("local.xml")
+           // val ctx = ClassPathXmlApplicationContext("local.xml")
 
             val bot = ctx.getBean<Bot>(Bot::class.java)
             bot.start()

@@ -2,17 +2,17 @@ package idgtl
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.telegram.telegrambots.TelegramBotsApi
-import org.telegram.telegrambots.api.methods.AnswerInlineQuery
-import org.telegram.telegrambots.api.methods.send.SendMessage
-import org.telegram.telegrambots.api.objects.Message
-import org.telegram.telegrambots.api.objects.Update
-import org.telegram.telegrambots.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent
-import org.telegram.telegrambots.api.objects.inlinequery.result.InlineQueryResult
-import org.telegram.telegrambots.api.objects.inlinequery.result.InlineQueryResultArticle
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.exceptions.TelegramApiException
-import org.telegram.telegrambots.exceptions.TelegramApiRequestException
+import org.telegram.telegrambots.meta.TelegramBotsApi
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.objects.Message
+import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -247,16 +247,16 @@ class Bot : TelegramLongPollingBot() {
     }
 
     private fun sendMsg(message: Message, text: String, reply: Boolean = false, date: Long) {
-        val sendMessage = SendMessage()
-        sendMessage.enableMarkdown(true)
-        sendMessage.chatId = message.chatId!!.toString()
+        val msg = SendMessage()
+        msg.enableMarkdown(true)
+        msg.chatId = message.chatId!!.toString()
         if (reply) {
-            sendMessage.replyToMessageId = message.messageId
+            msg.replyToMessageId = message.messageId
         }
-        sendMessage.text = text
+        msg.text = text
         var start = System.currentTimeMillis();
         try {
-            sendMessage(sendMessage)
+            execute(msg)
         } catch (e: TelegramApiException) {
             logger.error("cannot send " + text, e);
         }
@@ -281,7 +281,7 @@ class Bot : TelegramLongPollingBot() {
         }
         inlineQuery.results = list
         try {
-            answerInlineQuery(inlineQuery)
+            execute(inlineQuery)
         } catch (e: TelegramApiException) {
             logger.error("cannot send inline", e);
         }
