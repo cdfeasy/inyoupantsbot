@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -29,6 +30,7 @@ class Bot : TelegramLongPollingBot() {
     }
 
     internal var random = Random();
+    internal var command: Command = Command(this);
     internal var texts = Texts();
     internal var percent = AtomicInteger(50);
     @Inject
@@ -64,99 +66,6 @@ class Bot : TelegramLongPollingBot() {
         return false
     }
 
-    private fun checkCommand(msg: String, message: Message, chatId: Long): Boolean {
-        if (message.text.startsWith("/edit")) {
-            if("/edit help".equals(message.text)){
-                val text="/edit addLocal pants (only for this group)\n" +
-                        "/edit addGlobal pants (all groups, admin only)\n"+
-                        "/edit removeLocal pants\n"+
-                        "/edit removeGlobal pants\n"+
-                        "/edit addSpecialLocal pants1,pants2=pants in you pants\n"+
-                        "/edit addSpecialGlobal pants1,pants2=pants in you pants\n"+
-                        "/edit removeSpecialLocal pants1,pants2\n"+
-                        "/edit removeSpecialGlobal pants1,pants2\n";
-                sendMsg(message, text, false, System.currentTimeMillis())
-                return true;
-            }
-            val parts = message.text.split(" ");
-            if (parts.size < 3) return false;
-            when (parts[1]) {
-                "addLocal" ->
-                    if (parts[2].contains(" "))
-                        sendMsg(message, "Incorrect value, cannot contain spaces", false, System.currentTimeMillis())
-                    else {
-                        wordBase.exists(chatId);
-                        wordBase.addSingle(parts[2], chatId)
-                        sendMsg(message, "Ok", false, System.currentTimeMillis())
-                    }
-                "addGlobal" ->
-                    if (!wordBase.isAdmin(message.from.id.toString())) {
-                        sendMsg(message, "You are not admin", false, System.currentTimeMillis())
-                        return false;
-                    } else {
-                        if (parts[2].contains(" "))
-                            sendMsg(message, "Incorrect value, cannot contain spaces", false, System.currentTimeMillis())
-                        else {
-                            wordBase.addSingle(parts[2], null)
-                            sendMsg(message, "Ok", false, System.currentTimeMillis())
-                        }
-                    }
-                "removeLocal" -> {
-                    wordBase.exists(chatId);
-                    wordBase.removeSingle(parts[2], chatId)
-                }
-                "removeGlobal" ->
-                    if (!wordBase.isAdmin(message.from.id.toString())) {
-                        sendMsg(message, "You are not admin", false, System.currentTimeMillis())
-                        return false;
-                    } else {
-                        wordBase.removeSingle(parts[2], null)
-                        sendMsg(message, "Ok", false, System.currentTimeMillis())
-                    }
-                "addSpecialLocal" -> {
-                    val keyValue = message.text.replace("/edit addSpecialLocal ", "").split("=");
-                    if (keyValue.size != 2) {
-                        sendMsg(message, "Incorrect value, template bla1,bla2=text", false, System.currentTimeMillis())
-                    } else {
-                        wordBase.exists(chatId);
-                        wordBase.addSpecial(keyValue[0], keyValue[1], chatId);
-                        sendMsg(message, "Ok", false, System.currentTimeMillis())
-                    }
-                }
-                "addSpecialGlobal" -> {
-                    if (!wordBase.isAdmin(message.from.id.toString())) {
-                        sendMsg(message, "You are not admin", false, System.currentTimeMillis())
-                        return false;
-                    }
-                    val keyValue = message.text.replace("/edit addSpecialGlobal ", "").split("=");
-                    if (keyValue.size != 2) {
-                        sendMsg(message, "Incorrect value, template bla1,bla2=text", false, System.currentTimeMillis())
-                    } else {
-                        wordBase.addSpecial(keyValue[0], keyValue[1], null);
-                        sendMsg(message, "Ok", false, System.currentTimeMillis())
-                    }
-                }
-                "removeSpecialLocal" -> {
-                    val text = message.text.replace("/edit removeSpecialLocal ", "");
-                    wordBase.exists(chatId);
-                    wordBase.removeSpecial(text, chatId);
-                    sendMsg(message, "Ok", false, System.currentTimeMillis())
-                }
-                "removeSpecialGlobal" -> {
-                    if (!wordBase.isAdmin(message.from.id.toString())) {
-                        sendMsg(message, "You are not admin", false, System.currentTimeMillis())
-                        return false;
-                    }
-                    val text = message.text.replace("/edit removeSpecialGlobal ", "");
-                    wordBase.removeSpecial(text, null);
-                    sendMsg(message, "Ok", false, System.currentTimeMillis())
-                }
-            }
-            return true
-        }
-        return false
-    }
-
     override fun onUpdateReceived(update: Update) {
         if (update.hasInlineQuery()) {
             if (update.inlineQuery.query != null && update.inlineQuery.query.contains("tableflip")) {
@@ -166,10 +75,11 @@ class Bot : TelegramLongPollingBot() {
         }
         var date = System.currentTimeMillis();
         val message = update.message
-        val chatId = message?.chatId?:0;
-        if(chatId==0L){
-            logger.error("unknown error in "+message.text);
+        val chatId = message?.chatId ?: 0;
+        if (chatId == 0L) {
+            logger.error("unknown error in " + message.text);
         }
+
         val isRus = wordBase.isRus(chatId);
         if (message == null || message.date == null || Date().time / 1000 - message.date!! >= 10) {
             return
@@ -183,7 +93,7 @@ class Bot : TelegramLongPollingBot() {
         }
 
         try {
-            if (checkCommand(msg, message, chatId)) {
+            if (command.checkCommand(msg, message, chatId)) {
                 return
             }
         } catch (ex: Exception) {
@@ -212,7 +122,7 @@ class Bot : TelegramLongPollingBot() {
                     3 -> sendMsg(message, part + texts.postfix1(isRus), false, date)
                     4 -> sendMsg(message, texts.prefix1(isRus) + part, false, date)
                     5 -> sendMsg(message, part + texts.postfix2(isRus), false, date)
-                    6 -> sendMsg(message, texts.prefix1(isRus) + part + ", "+texts.dog1(isRus), false, date)
+                    6 -> sendMsg(message, texts.prefix1(isRus) + part + ", " + texts.dog1(isRus), false, date)
                     else -> sendMsg(message, texts.prefix2(isRus) + part, false, date)
                 }
                 return
@@ -239,14 +149,14 @@ class Bot : TelegramLongPollingBot() {
                 3 -> sendMsg(message, text + texts.postfix1(isRus), false, date)
                 4 -> sendMsg(message, texts.prefix1(isRus) + text, false, date)
                 5 -> sendMsg(message, text + texts.postfix2(isRus), false, date)
-                6 -> sendMsg(message, texts.prefix1(isRus) + text + ", "+texts.dog1(isRus), false, date)
+                6 -> sendMsg(message, texts.prefix1(isRus) + text + ", " + texts.dog1(isRus), false, date)
                 else -> sendMsg(message, texts.prefix2(isRus) + text, false, date)
             }
             return
         }
     }
 
-    private fun sendMsg(message: Message, text: String, reply: Boolean = false, date: Long) {
+    fun sendMsg(message: Message, text: String, reply: Boolean = false, date: Long) {
         val msg = SendMessage()
         msg.enableMarkdown(true)
         msg.chatId = message.chatId!!.toString()
@@ -262,6 +172,18 @@ class Bot : TelegramLongPollingBot() {
         }
         logger.info("send {} {} {} for {}/{}", message.from.id, message.from.userName, text, System.currentTimeMillis() - date, System.currentTimeMillis() - start);
 
+    }
+
+    fun checkAdmin(chatId: String) {
+        val msg = GetChatAdministrators()
+        msg.chatId = chatId
+        var start = System.currentTimeMillis();
+        try {
+            val execute = execute(msg)
+            logger.info("ChatAdms {}", execute);
+        } catch (e: TelegramApiException) {
+            logger.error("cannot send ", e);
+        }
     }
 
     private fun sendInlineMsg(msgId: String) {

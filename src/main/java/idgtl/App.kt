@@ -14,8 +14,8 @@ object App {
     @JvmStatic fun main(args: Array<String>) {
         try {
             ApiContextInitializer.init();
-            val ctx = FileSystemXmlApplicationContext("/opt/inyoupantsbot/conf/inyoupanstbot.xml")
-           // val ctx = ClassPathXmlApplicationContext("local.xml")
+           // val ctx = FileSystemXmlApplicationContext("/opt/inyoupantsbot/conf/inyoupanstbot.xml")
+            val ctx = ClassPathXmlApplicationContext("local.xml")
 
             val bot = ctx.getBean<Bot>(Bot::class.java)
             bot.start()

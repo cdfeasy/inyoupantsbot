@@ -140,25 +140,29 @@ class WordBase {
     }
 
     fun addSpecial(specialWord: String, specialVal: String, chatId: Long?) {
+        var m:Map<String,String>;
+        m=HashMap();
+        m.put("1","2");
+
         if (chatId == null) {
             if (!state.specials.containsKey(specialWord) && state.specials.size < 10000) {
-                (state.specials as HashMap).put(specialWord, specialVal);
+                state.specials.put(specialWord, specialVal);
                 var parts = specialWord.split(",");
                 if (parts.size == 1) {
-                    (state.specialsMapped as HashMap).put(specialWord, specialVal);
+                    state.specialsMapped.put(specialWord, specialVal);
                 } else {
-                    parts.forEach { (state.specialsMapped as HashMap).put(it, specialVal); }
+                    parts.forEach { state.specialsMapped.put(it, specialVal); }
                 }
                 changed = true;
             }
         } else {
             if (!(prefs.get(chatId)?.specials?.contains(specialWord) ?: true) && prefs.get(chatId)?.specials?.size ?: 0 < 10000) {
-                (prefs.get(chatId)?.specials as HashMap).put(specialWord, specialVal);
+                prefs.get(chatId)?.specials?.put(specialWord, specialVal);
                 var parts = specialWord.split(",");
                 if (parts.size == 1) {
-                    (prefs.get(chatId)?.specialsMapped as HashMap).put(specialWord, specialVal);
+                    prefs.get(chatId)?.specialsMapped?.put(specialWord, specialVal);
                 } else {
-                    parts.forEach { (prefs.get(chatId)?.specialsMapped as HashMap).put(it, specialVal); }
+                    parts.forEach { prefs.get(chatId)?.specialsMapped?.put(it, specialVal); }
                 }
                 changed = true;
             }
@@ -167,21 +171,21 @@ class WordBase {
 
     fun removeSpecial(specialWord: String, chatId: Long?) {
         if (chatId == null) {
-            (state.specials as HashMap).remove(specialWord)
+            state.specials.remove(specialWord)
             var parts = specialWord.split(",");
             if (parts.size == 1) {
-                (state.specialsMapped as HashMap).remove(specialWord);
+                state.specialsMapped.remove(specialWord);
             } else {
-                parts.forEach { (state.specialsMapped as HashMap).remove(it); }
+                parts.forEach { state.specialsMapped.remove(it); }
             }
             changed = true;
         } else {
-            (prefs.get(chatId)?.specials as HashMap).remove(specialWord)
+            prefs.get(chatId)?.specials?.remove(specialWord)
             var parts = specialWord.split(",");
             if (parts.size == 1) {
-                (prefs.get(chatId)?.specialsMapped as HashMap)?.remove(specialWord);
+                prefs.get(chatId)?.specialsMapped?.remove(specialWord);
             } else {
-                parts.forEach { (prefs.get(chatId)?.specialsMapped as HashMap)?.remove(it); }
+                parts.forEach { prefs.get(chatId)?.specialsMapped?.remove(it); }
             }
             changed = true;
         }
