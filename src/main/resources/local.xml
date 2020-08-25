@@ -15,7 +15,7 @@
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties">
-            <value>state=C:/work/inyoupantsbot/src/main/resources/state.json</value>
+            <value>state=C:/work/work.old/inyoupantsbot/src/main/resources/state.json</value>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>

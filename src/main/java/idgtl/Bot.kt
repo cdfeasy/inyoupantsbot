@@ -1,9 +1,11 @@
 package idgtl
 
+import com.google.inject.Inject
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.TelegramBotsApi
+import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -14,9 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQuery
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import org.telegram.telegrambots.meta.generics.BotSession
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 
 private val s = "В штанах твоих "
 
@@ -29,22 +31,24 @@ class Bot : TelegramLongPollingBot() {
         val logger = LoggerFactory.getLogger(Bot::class.java.getSimpleName())
     }
 
-    internal var random = Random();
-    internal var command: Command = Command(this);
-    internal var texts = Texts();
-    internal var percent = AtomicInteger(50);
-    @Inject
-    lateinit var wordBase: WordBase;
+    internal var random = Random()
+    internal var command: Command = Command(this)
+    internal var texts = Texts()
+    internal var percent = AtomicInteger(50)
+    lateinit var botSession: BotSession
+    lateinit var wordBase: WordBase
 
     fun start() {
-
         val telegramBotsApi = TelegramBotsApi()
         try {
-            val botSession = telegramBotsApi.registerBot(this)
+            botSession = telegramBotsApi.registerBot(this)
         } catch (e: TelegramApiRequestException) {
             logger.error("cannot start telegramm", e)
         }
 
+    }
+    fun stop() {
+        botSession.stop()
     }
 
     lateinit var _botUsername: String
