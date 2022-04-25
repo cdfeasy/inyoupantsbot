@@ -1,20 +1,43 @@
 {
   "rus": {
-    "text1": "В штанах твоих",
-    "text2": "В штанах у тебя",
-    "text32": "у тебя в штанах",
-    "addon1": "пёс",
-    "addon2": "собака сутулая",
-    "verb1": "Штаны себе сперва",
-    "verb2": "в штаны себе"
+    "textPrefix": [
+      "В штанах твоих",
+      "В штанах у тебя"
+    ],
+    "textPostfix": [
+      "у тебя в штанах"
+    ],
+    "addon": [
+      "пёс",
+      "пёс",
+      "собака",
+      "собака сутулая"
+    ],
+    "verbPrefix": [
+      "Штаны себе сперва"
+    ],
+    "verbPostfix": [
+      "в штаны себе"
+    ]
   },
   "eng": {
-    "text1": "In your pants",
-    "text2": "In your pants",
-    "text3": "In your pants",
-    "addon1": "dog",
-    "addon2": "slouching dog",
-    "verb1": "Штаны себе сперва",
-    "verb2": "в штаны себе"
+    "textPrefix": [
+      "In your pants"
+    ],
+    "textPostfix": [
+      "In your pants"
+    ],
+    "addon": [
+      "dog",
+      "slouching dog"
+    ],
+    "verbPrefix": [
+      "Штаны себе сперва",
+      "в штаны себе"
+    ],
+    "verbPostfix": [
+      "Штаны себе сперва",
+      "в штаны себе"
+    ]
   }
 }

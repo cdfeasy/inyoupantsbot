@@ -2,24 +2,34 @@ package idgtl
 
 import org.telegram.telegrambots.meta.api.objects.Message
 
-class Command(val bot:Bot) {
+class Command(val bot: Bot) {
     fun checkCommand(msg: String, message: Message, chatId: Long): Boolean {
-        if("/admins".equals(message.text)){
+        if ("/admins".equals(message.text)) {
             bot.checkAdmin(chatId.toString())
             return true
         }
+        if ("/counters".equals(message.text)) {
+            val text = bot.inMemoryData.getCounters(chatId)
+            bot.sendMsg(message, text, false, System.currentTimeMillis(), true)
+            return true
+        }
         if (message.text.startsWith("/edit")) {
-            if("/edit help".equals(message.text)){
-                val text="/edit addLocal pants (only for this group)\n" +
-                        "/edit addGlobal pants (all groups, admin only)\n"+
-                        "/edit removeLocal pants\n"+
-                        "/edit removeGlobal pants\n"+
-                        "/edit addSpecialLocal pants1,pants2=pants in you pants\n"+
-                        "/edit addSpecialGlobal pants1,pants2=pants in you pants\n"+
-                        "/edit removeSpecialLocal pants1,pants2\n"+
+            if ("/edit help".equals(message.text)) {
+                val text = "" +
+                        "Пока в разработе\n" +
+                        "/edit addLocal pants (only for this group)\n" +
+                        "/edit addGlobal pants (all groups, admin only)\n" +
+                        "/edit removeLocal pants\n" +
+                        "/edit removeGlobal pants\n" +
+                        "/edit addSpecialLocal pants1,pants2=pants in you pants\n" +
+                        "/edit addSpecialGlobal pants1,pants2=pants in you pants\n" +
+                        "/edit removeSpecialLocal pants1,pants2\n" +
                         "/edit removeSpecialGlobal pants1,pants2\n";
                 bot.sendMsg(message, text, false, System.currentTimeMillis())
-                return true;
+                return true
+            }
+            if(true){
+                return true
             }
 
 
@@ -28,7 +38,12 @@ class Command(val bot:Bot) {
             when (parts[1]) {
                 "addLocal" ->
                     if (parts[2].contains(" "))
-                        bot.sendMsg(message, "Incorrect value, cannot contain spaces", false, System.currentTimeMillis())
+                        bot.sendMsg(
+                            message,
+                            "Incorrect value, cannot contain spaces",
+                            false,
+                            System.currentTimeMillis()
+                        )
                     else {
                         bot.wordBase.exists(chatId);
                         bot.wordBase.addSingle(parts[2], chatId)
@@ -40,7 +55,12 @@ class Command(val bot:Bot) {
                         return false;
                     } else {
                         if (parts[2].contains(" "))
-                            bot.sendMsg(message, "Incorrect value, cannot contain spaces", false, System.currentTimeMillis())
+                            bot.sendMsg(
+                                message,
+                                "Incorrect value, cannot contain spaces",
+                                false,
+                                System.currentTimeMillis()
+                            )
                         else {
                             bot.wordBase.addSingle(parts[2], null)
                             bot.sendMsg(message, "Ok", false, System.currentTimeMillis())
@@ -61,7 +81,12 @@ class Command(val bot:Bot) {
                 "addSpecialLocal" -> {
                     val keyValue = message.text.replace("/edit addSpecialLocal ", "").split("=");
                     if (keyValue.size != 2) {
-                        bot.sendMsg(message, "Incorrect value, template bla1,bla2=text", false, System.currentTimeMillis())
+                        bot.sendMsg(
+                            message,
+                            "Incorrect value, template bla1,bla2=text",
+                            false,
+                            System.currentTimeMillis()
+                        )
                     } else {
                         bot.wordBase.exists(chatId);
                         bot.wordBase.addSpecial(keyValue[0], keyValue[1], chatId);
@@ -75,7 +100,12 @@ class Command(val bot:Bot) {
                     }
                     val keyValue = message.text.replace("/edit addSpecialGlobal ", "").split("=");
                     if (keyValue.size != 2) {
-                        bot.sendMsg(message, "Incorrect value, template bla1,bla2=text", false, System.currentTimeMillis())
+                        bot.sendMsg(
+                            message,
+                            "Incorrect value, template bla1,bla2=text",
+                            false,
+                            System.currentTimeMillis()
+                        )
                     } else {
                         bot.wordBase.addSpecial(keyValue[0], keyValue[1], null);
                         bot.sendMsg(message, "Ok", false, System.currentTimeMillis())
