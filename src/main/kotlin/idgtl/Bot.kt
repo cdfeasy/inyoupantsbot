@@ -190,12 +190,11 @@ class Bot : TelegramLongPollingBot {
         if (!isService) {
             inMemoryData.addCounter(message.chatId!!)
             logger.info(
-                "send {} {} {} for {}/{}",
+                "send {} {} {} {}",
+                msg.chatId,
                 message.from.id,
                 message.from.userName,
-                text,
-                System.currentTimeMillis() - date,
-                System.currentTimeMillis() - start
+                text
             )
         }
     }
